@@ -408,7 +408,7 @@ int tn5250_ssl_stream_init (Tn5250Stream *This)
 
 /* retrieve current options */
 
-   flags = SSL_CTX_get_options();
+   flags = SSL_CTX_get_options(This->ssl_context);
 
 /* disable compression, which can leak information */
 
@@ -562,7 +562,7 @@ int tn3270_ssl_stream_init (Tn5250Stream *This)
 
 /* retrieve current options */
 
-   flags = SSL_CTX_get_options();
+   flags = SSL_CTX_get_options(This->ssl_context);
 
 /* disable compression, which can leak information */
 
@@ -745,7 +745,7 @@ static int ssl_stream_connect(Tn5250Stream * This, const char *to)
    /* Must set Server Name Indication (SNI) here. It should be set   */
    /* to the hostname, but it can use an IP address if it is used in */
    /* the X.509 certificate.                                         */
-   if (SSL_set_tlsext_host_name(ssl, address) != 1) {
+   if (SSL_set_tlsext_host_name(This->ssl_handle, address) != 1) {
       TN5250_LOG(("sslstream: SSL_set_tlsext_host_name() failed, errnum=0x%lx\n", ERR_get_error()));
       /* Not fatal, but not good either. */
       /* return -1; */
